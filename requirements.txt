@@ -1,0 +1,15 @@
+# Dbeautifulsoup4>=4.12.0
+requests>=2.31.0
+flask>=3.0.0
+underthesea>=6.7.0
+selenium>=4.15.0
+# Compatible with Python 3.12+
+
+beautifulsoup4>=4.12.2
+requests>=2.31.0
+flask>=3.0.0
+underthesea>=6.7.0
+
+# Optional (không bắt buộc cho project này)
+# numpy>=1.26.0
+# pandas>=2.1.0

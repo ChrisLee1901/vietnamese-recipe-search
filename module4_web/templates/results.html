@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả tìm kiếm: {{ query }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            color: #202124;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .logo {
+            font-size: 40px;
+            text-decoration: none;
+        }
+        
+        .search-box {
+            flex: 1;
+            background: white;
+            border-radius: 50px;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 12px 20px;
+            font-size: 16px;
+        }
+        
+        .search-box button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .search-info {
+            color: #70757a;
+            margin-bottom: 24px;
+            font-size: 14px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .search-info strong {
+            color: #202124;
+            font-weight: 600;
+        }
+        
+        .result-item {
+            background: white;
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            border-left: 4px solid transparent;
+            overflow: hidden;
+            word-wrap: break-word;
+        }
+        
+        .result-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            border-left-color: #667eea;
+        }
+        
+        .result-title {
+            font-size: 20px;
+            font-weight: 400;
+            color: #1a0dab;
+            margin-bottom: 8px;
+            text-decoration: none;
+            display: block;
+            line-height: 1.3;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .result-title:hover {
+            text-decoration: underline;
+        }
+        
+        .result-url {
+            color: #006621;
+            font-size: 14px;
+            margin-bottom: 8px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-break: break-all;
+        }
+        
+        .result-description {
+            color: #4d5156;
+            line-height: 1.58;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            word-break: break-word;
+            max-width: 100%;
+        }
+        
+        .result-meta {
+            display: flex;
+            gap: 16px;
+            color: #70757a;
+            font-size: 13px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .result-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .result-score {
+            background: linear-gradient(135deg, #e8eaf6 0%, #f3e5f5 100%);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #5e35b1;
+            font-weight: 600;
+            margin-left: auto;
+        }
+        
+        mark {
+            background: linear-gradient(120deg, #ffd54f 0%, #ffeb3b 100%);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #000;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .pagination a,
+        .pagination span {
+            padding: 10px 15px;
+            background: white;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .pagination .current {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .pagination a:hover {
+            background: #f0f0f0;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 10px;
+        }
+        
+        .no-results-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .no-results h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .no-results p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🍳</a>
+            <form action="/search" method="GET" style="flex: 1;">
+                <div class="search-box">
+                    <input type="text" name="q" value="{{ query }}" required>
+                    <button type="submit">🔍 Tìm</button>
+                </div>
+            </form>
+        </div>
+    </header>
+    
+    <div class="container">
+        {% if results %}
+            <div class="search-info">
+                Tìm thấy <strong>{{ total_results }}</strong> kết quả cho "<strong>{{ query }}</strong>"
+            </div>
+            
+            {% for result in results %}
+            <div class="result-item">
+                <a href="{{ result.url }}" class="result-title">
+                    {{ result.highlighted_title|safe }}
+                </a>
+                <div class="result-url">{{ result.url }}</div>
+                <div class="result-description">
+                    {{ result.highlighted_description|safe }}
+                </div>
+                <div class="result-meta">
+                    {% if result.prep_time %}
+                    <span>⏱️ Chuẩn bị: {{ result.prep_time }}</span>
+                    {% endif %}
+                    {% if result.cook_time %}
+                    <span>🔥 Nấu: {{ result.cook_time }}</span>
+                    {% endif %}
+                    {% if result.servings %}
+                    <span>👥 {{ result.servings }}</span>
+                    {% endif %}
+                    <span class="result-score">Điểm: {{ "%.2f"|format(result.score) }}</span>
+                </div>
+            </div>
+            {% endfor %}
+            
+            {% if total_pages > 1 %}
+            <div class="pagination">
+                {% if page > 1 %}
+                <a href="/search?q={{ query }}&page={{ page - 1 }}">← Trước</a>
+                {% endif %}
+                
+                {% for p in range(1, total_pages + 1) %}
+                    {% if p == page %}
+                        <span class="current">{{ p }}</span>
+                    {% elif p <= 3 or p > total_pages - 3 or (p >= page - 1 and p <= page + 1) %}
+                        <a href="/search?q={{ query }}&page={{ p }}">{{ p }}</a>
+                    {% elif p == 4 or p == total_pages - 3 %}
+                        <span>...</span>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if page < total_pages %}
+                <a href="/search?q={{ query }}&page={{ page + 1 }}">Sau →</a>
+                {% endif %}
+            </div>
+            {% endif %}
+        {% else %}
+            <div class="no-results">
+                <div class="no-results-icon">🔍</div>
+                <h2>Không tìm thấy kết quả</h2>
+                <p>Không có công thức nào phù hợp với từ khóa "{{ query }}"</p>
+                <p style="margin-top: 10px;">Hãy thử với từ khóa khác hoặc <a href="/">quay lại trang chủ</a></p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
